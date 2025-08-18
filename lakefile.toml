@@ -1,0 +1,10 @@
+name = "lean-pq"
+version = "0.1.0"
+defaultTargets = ["lean-pq"]
+
+[[lean_lib]]
+name = "LeanPq"
+
+[[lean_exe]]
+name = "lean-pq"
+root = "Main"
