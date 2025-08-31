@@ -1,0 +1,17 @@
+CompileFlags:
+  Add: 
+    # - -I$(lake env lean --print-prefix)/include
+    - -I/Users/nicolasgrislain/.elan/toolchains/leanprover--lean4---v4.22.0/include
+    - -I/usr/local/include
+    - -I/opt/homebrew/include
+    # - $(pkg-config --cflags libpq)
+    - -I/nix/store/70xmhl2dzxzvljn4aa3klds0qymvk89g-libpq-17.5-dev/include
+    - -std=c17
+    - -fPIC
+  Remove: []
+Index:
+  Background: Build
+Diagnostics:
+  ClangTidy:
+    Add: [performance-*, modernize-*]
+    Remove: [performance-move-const-arg]
