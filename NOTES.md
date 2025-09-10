@@ -2,6 +2,20 @@
 title: Lean PQ
 ---
 
+# Develepment Environment
+
+## Ubuntu
+
+`docker run --rm -it -v $(pwd):/workspace -w /workspace ubuntu:latest bash`
+
+Then:
+```bash
+apt update
+apt install git build-essential curl libcurl4-openssl-dev pkg-config
+curl https://elan.lean-lang.org/elan-init.sh | sh
+source $HOME/.elan/env
+```
+
 # References
 
 ## Lean 4
