@@ -9,6 +9,8 @@ LibPQ documentation:
 https://www.postgresql.org/docs/current/libpq.html
 */
 
+#define DEBUG 1
+
 #define LEAN_PQ_CONNECTION_FAILED_INIT 100
 
 struct connection {
@@ -71,8 +73,45 @@ static void initialize() {
 //     return lean_io_result_mk_ok(context_wrap_handle(context));
 // }
 
-//PQconnectdb
+// PQconnectdbParams
+LEAN_EXPORT lean_object *lean_pq_connect_db_params(b_lean_obj_arg keywords, b_lean_obj_arg values, b_lean_obj_arg expand_dbname) {
+  fprintf(stdout, "lean_pq_connect_db_params\n");
+  initialize();
+  size_t size = lean_array_size(keywords);
+  const char **keywords_cstr = (const char **)malloc(size * sizeof(const char *));
+  const char **values_cstr = (const char **)malloc(size * sizeof(const char *));
+  for (size_t i = 0; i < size; i++) {
+    keywords_cstr[i] = lean_string_cstr(lean_array_uget(keywords, i));
+    fprintf(stderr, "keywords_cstr[%zu] = %s\n", i, keywords_cstr[i]);
+  }
+  for (size_t i = 0; i < size; i++) {
+    values_cstr[i] = lean_string_cstr(lean_array_uget(values, i));
+    fprintf(stderr, "values_cstr[%zu] = %s\n", i, values_cstr[i]);
+  }
+  int expand_dbname_cstr = lean_unbox(expand_dbname);
+  PGconn *conn = PQconnectdbParams(keywords_cstr, values_cstr, expand_dbname_cstr); // Create the libpq handle
+
+  Connection *connection = (Connection *)malloc(sizeof *connection); // Allocate our wrapper
+
+  if (!connection)
+    return lean_io_result_mk_error(lean_box(LEAN_PQ_CONNECTION_FAILED_INIT));
+
+  // Initialize all fields to safe defaults
+  connection->conn = conn;
+
+#if DEBUG
+  fprintf(stderr, "pq_connect_db %p\n", conn);
+#endif
+
+  if (!conn)
+    return lean_io_result_mk_error(lean_box(LEAN_PQ_CONNECTION_FAILED_INIT));
+  else
+    return lean_io_result_mk_ok(pq_connection_wrap_handle(connection));
+}
+
+// PQconnectdb
 LEAN_EXPORT lean_object *lean_pq_connect_db(b_lean_obj_arg conninfo) {
+  fprintf(stdout, "lean_pq_connect_db\n");
   initialize();
   const char *conninfo_cstr = lean_string_cstr(conninfo); // Convert Lean string to C string
   PGconn *conn = PQconnectdb(conninfo_cstr); // Create the libpq handle
@@ -95,8 +134,16 @@ LEAN_EXPORT lean_object *lean_pq_connect_db(b_lean_obj_arg conninfo) {
     return lean_io_result_mk_ok(pq_connection_wrap_handle(connection));
 }
 
-// struct connection *create_connection(const char *host, const char *port,
-// const char *user, const char *password, const char *database) {
-//     PGconn *conn = PQconnectdb(host, port, user, password, database);
-//     return conn;
-// }
+LEAN_EXPORT lean_object *lean_pq_finish(b_lean_obj_arg conn) {
+  fprintf(stdout, "lean_pq_finish\n");
+  Connection *connection = pq_connection_get_handle(conn);
+  PQfinish(connection->conn);
+  return lean_io_result_mk_ok(lean_box(0));
+}
+
+LEAN_EXPORT lean_object *lean_pq_reset(b_lean_obj_arg conn) {
+  fprintf(stdout, "lean_pq_reset\n");
+  Connection *connection = pq_connection_get_handle(conn);
+  PQreset(connection->conn);
+  return lean_io_result_mk_ok(lean_box(0));
+} 
