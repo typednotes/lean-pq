@@ -16,4 +16,6 @@ def main : IO Unit := do
       let conn <- PqConnectDbParams keywords values
       PqReset conn
       PqFinish conn
+    IO.println s!"Test done"
   catch e => IO.println s!"error: {e}"
+  IO.println s!"Test done 2"
