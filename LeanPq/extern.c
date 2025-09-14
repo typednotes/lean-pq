@@ -148,6 +148,8 @@ LEAN_EXPORT lean_obj_res lean_pq_reset(b_lean_obj_arg conn) {
   return lean_io_result_mk_ok(lean_box(0));
 }
 
+
+//--------------------------------
 // Quick test outputing a string
 LEAN_EXPORT lean_obj_res lean_pq_quick_test() {
   const char *str = "Hello, World!";
