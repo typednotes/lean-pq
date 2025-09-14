@@ -34,7 +34,7 @@ static void pq_connection_finalizer(void *h) {
 
 static void pq_connection_foreach(void *mod, b_lean_obj_arg fn) {}
 
-lean_object *pq_connection_wrap_handle(Connection *hcurl) {
+lean_obj_res pq_connection_wrap_handle(Connection *hcurl) {
   return lean_alloc_external(global_pq_connection_external_class, hcurl);
 }
 
@@ -74,7 +74,7 @@ static void initialize() {
 // }
 
 // PQconnectdbParams
-LEAN_EXPORT lean_object *lean_pq_connect_db_params(b_lean_obj_arg keywords, b_lean_obj_arg values, b_lean_obj_arg expand_dbname) {
+LEAN_EXPORT lean_obj_res lean_pq_connect_db_params(b_lean_obj_arg keywords, b_lean_obj_arg values, b_lean_obj_arg expand_dbname) {
   fprintf(stdout, "lean_pq_connect_db_params\n");
   initialize();
   size_t size = lean_array_size(keywords);
@@ -110,7 +110,7 @@ LEAN_EXPORT lean_object *lean_pq_connect_db_params(b_lean_obj_arg keywords, b_le
 }
 
 // PQconnectdb
-LEAN_EXPORT lean_object *lean_pq_connect_db(b_lean_obj_arg conninfo) {
+LEAN_EXPORT lean_obj_res lean_pq_connect_db(b_lean_obj_arg conninfo) {
   fprintf(stdout, "lean_pq_connect_db\n");
   initialize();
   const char *conninfo_cstr = lean_string_cstr(conninfo); // Convert Lean string to C string
@@ -134,16 +134,22 @@ LEAN_EXPORT lean_object *lean_pq_connect_db(b_lean_obj_arg conninfo) {
     return lean_io_result_mk_ok(pq_connection_wrap_handle(connection));
 }
 
-LEAN_EXPORT lean_object *lean_pq_finish(b_lean_obj_arg conn) {
+LEAN_EXPORT lean_obj_res lean_pq_finish(b_lean_obj_arg conn) {
   fprintf(stdout, "lean_pq_finish\n");
   Connection *connection = pq_connection_get_handle(conn);
   PQfinish(connection->conn);
   return lean_io_result_mk_ok(lean_box(0));
 }
 
-LEAN_EXPORT lean_object *lean_pq_reset(b_lean_obj_arg conn) {
+LEAN_EXPORT lean_obj_res lean_pq_reset(b_lean_obj_arg conn) {
   fprintf(stdout, "lean_pq_reset\n");
   Connection *connection = pq_connection_get_handle(conn);
   PQreset(connection->conn);
   return lean_io_result_mk_ok(lean_box(0));
-} 
+}
+
+// Quick test outputing a string
+LEAN_EXPORT lean_obj_res lean_pq_quick_test() {
+  const char *str = "Hello, World!";
+  return lean_io_result_mk_ok(lean_mk_string(str));
+}
