@@ -49,33 +49,15 @@ static void initialize() {
   }
 }
 
-// //PQconnectdbParams
-// LEAN_EXPORT lean_object *lean_pq_connect_db_params(b_lean_obj_arg keywords, b_lean_obj_arg values, b_lean_obj_arg expand_dbname) {
-//   initialize();
-
-//   PGconn *conn = PQconnectdbParams(NULL, NULL, NULL, NULL, NULL); // Create the libpq handle
-
-//   Connection *connection = (Connection *)malloc(sizeof *connection); // Allocate our wrapper
-
-//   if (!context)
-//     return lean_io_result_mk_error(lean_box(CURLE_FAILED_INIT));
-
-//   // Initialize all fields to safe defaults
-//   context->curl = curl;
-
-// #if DEBUG
-//   fprintf(stderr, "curl_easy_init %p\n", curl);
-// #endif
-
-//   if (!curl)
-//     return lean_io_result_mk_error(lean_box(CURLE_FAILED_INIT));
-//   else
-//     return lean_io_result_mk_ok(context_wrap_handle(context));
-// }
+static lean_object* mk_pq_connection_error(const char* msg) {
+  lean_object* msg_obj = lean_mk_string(msg);
+  lean_object* connect_err = lean_alloc_ctor(0, 1, 0); // IOError constructor
+  lean_ctor_set(connect_err, 0, msg_obj);
+  return connect_err;
+}
 
 // PQconnectdbParams
 LEAN_EXPORT lean_obj_res lean_pq_connect_db_params(b_lean_obj_arg keywords, b_lean_obj_arg values, b_lean_obj_arg expand_dbname) {
-  fprintf(stdout, "lean_pq_connect_db_params\n");
   initialize();
   size_t size = lean_array_size(keywords);
   const char **keywords_cstr = (const char **)malloc(size * sizeof(const char *));
@@ -90,6 +72,10 @@ LEAN_EXPORT lean_obj_res lean_pq_connect_db_params(b_lean_obj_arg keywords, b_le
   }
   int expand_dbname_cstr = lean_unbox(expand_dbname);
   PGconn *conn = PQconnectdbParams(keywords_cstr, values_cstr, expand_dbname_cstr); // Create the libpq handle
+
+  ConnStatusType status = PQstatus(conn);
+  if (status != CONNECTION_OK)
+    return lean_io_result_mk_error(lean_box(status));
 
   Connection *connection = (Connection *)malloc(sizeof *connection); // Allocate our wrapper
 
