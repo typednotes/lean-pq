@@ -150,3 +150,8 @@ LEAN_EXPORT lean_obj_res lean_pq_quick_test() {
   const char *str = "Hello, World!";
   return lean_io_result_mk_ok(lean_mk_string(str));
 }
+
+LEAN_EXPORT lean_obj_res lean_pq_quick_error_test() {
+  const char *str = "Hello, World! Error";
+  return lean_io_result_mk_error(mk_pq_other_error(str));
+}

@@ -1,3 +1,4 @@
+import Init.Data.ToString.Basic
 import LeanPq.Extern
 import LeanPq.Error
 
@@ -12,6 +13,8 @@ def main : IO Unit := do
     IO.println testString
     IO.println s!"Test"
     IO.println (LeanPq.Error.otherError "test")
+    let testString2 ← PqQuickErrorTest.toIO (fun e => IO.Error.otherError 0 (toString e))
+    IO.println testString2
     -- let conninfo := "host=localhost port=5432 user=postgres password=postgres dbname=postgres"
     -- let conn := pq_connect_db conninfo
     -- let keywords := #["host", "port", "user", "password", "dbname"]
