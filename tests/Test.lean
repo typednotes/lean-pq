@@ -11,6 +11,7 @@ def main : IO Unit := do
   try
     IO.println testString
     IO.println s!"Test"
+    IO.println (LeanPq.Error.otherError "test")
     -- let conninfo := "host=localhost port=5432 user=postgres password=postgres dbname=postgres"
     -- let conn := pq_connect_db conninfo
     -- let keywords := #["host", "port", "user", "password", "dbname"]
