@@ -1,4 +1,5 @@
 import LeanPq.Extern
+import LeanPq.Error
 
 open Lean
 open LeanPq
@@ -6,7 +7,7 @@ open LeanPq
 open Extern
 
 def main : IO Unit := do
-  let testString ← (PqQuickTest.toIO (fun e => IO.Error.otherError e "test"))
+  let testString ← PqQuickTest.toIO (fun e => IO.Error.otherError 0 "test")
   try
     IO.println testString
     IO.println s!"Test"

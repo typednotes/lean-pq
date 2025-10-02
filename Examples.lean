@@ -1,4 +1,9 @@
-import LeanPq
+import LeanPq.Error
 
-def main : IO Unit :=
-  IO.println s!"Hello, {hello}!"
+open LeanPq
+
+def err : Error := Error.connectionError 2
+
+def main : IO Unit := do
+  IO.println "Hello, World!"
+  IO.println err

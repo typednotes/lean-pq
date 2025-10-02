@@ -49,11 +49,20 @@ static void initialize() {
   }
 }
 
-static lean_object* mk_pq_connection_error(const char* msg) {
-  lean_object* msg_obj = lean_mk_string(msg);
+// Error management
+
+static lean_object* mk_pq_connection_error(const uint32_t code) {
+  lean_object* code_obj = lean_box_uint32(code);
   lean_object* connect_err = lean_alloc_ctor(0, 1, 0); // IOError constructor
-  lean_ctor_set(connect_err, 0, msg_obj);
+  lean_ctor_set(connect_err, 0, code_obj);
   return connect_err;
+}
+
+static lean_object* mk_pq_other_error(const char* msg) {
+  lean_object* msg_obj = lean_mk_string(msg);
+  lean_object* other_err = lean_alloc_ctor(1, 1, 0); // IOError constructor
+  lean_ctor_set(other_err, 0, msg_obj);
+  return other_err;
 }
 
 // PQconnectdbParams
@@ -75,12 +84,12 @@ LEAN_EXPORT lean_obj_res lean_pq_connect_db_params(b_lean_obj_arg keywords, b_le
 
   ConnStatusType status = PQstatus(conn);
   if (status != CONNECTION_OK)
-    return lean_io_result_mk_error(lean_box(status));
+    return lean_io_result_mk_error(mk_pq_connection_error((uint32_t)status));
 
   Connection *connection = (Connection *)malloc(sizeof *connection); // Allocate our wrapper
 
   if (!connection)
-    return lean_io_result_mk_error(lean_box(LEAN_PQ_CONNECTION_FAILED_INIT));
+    return lean_io_result_mk_error(mk_pq_other_error("No connection"));
 
   // Initialize all fields to safe defaults
   connection->conn = conn;
@@ -90,7 +99,7 @@ LEAN_EXPORT lean_obj_res lean_pq_connect_db_params(b_lean_obj_arg keywords, b_le
 #endif
 
   if (!conn)
-    return lean_io_result_mk_error(lean_box(LEAN_PQ_CONNECTION_FAILED_INIT));
+    return lean_io_result_mk_error(mk_pq_other_error("No connection"));
   else
     return lean_io_result_mk_ok(pq_connection_wrap_handle(connection));
 }
