@@ -4,6 +4,7 @@ import LeanPq.Error
 
 open Lean
 open LeanPq
+open LeanPq.Error
 
 open Extern
 
@@ -13,7 +14,7 @@ def main : IO Unit := do
     IO.println testString
     IO.println s!"Test"
     IO.println (LeanPq.Error.otherError "test")
-    let testString2 ← PqQuickErrorTest.toIO (fun e => IO.Error.otherError 0 (toString e))
+    let testString2 ← PqQuickErrorTest.toIO (fun e => IO.Error.otherError 0 (ToString.toString e))
     IO.println testString2
     -- let conninfo := "host=localhost port=5432 user=postgres password=postgres dbname=postgres"
     -- let conn := pq_connect_db conninfo
