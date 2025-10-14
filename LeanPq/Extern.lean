@@ -18,12 +18,7 @@ opaque PqReset (conn : Handle): EIO LeanPq.Error  Unit
 @[extern "lean_pq_finish"]
 opaque PqFinish (conn : Handle): EIO LeanPq.Error Unit
 
-
-
-@[extern "lean_pq_quick_test"]
-opaque PqQuickTest: EIO LeanPq.Error String
-
-@[extern "lean_pq_quick_error_test"]
-opaque PqQuickErrorTest: EIO LeanPq.Error String
+@[extern "lean_pq_db"]
+opaque PqDb (conn : Handle): EIO LeanPq.Error String
 
 end Extern
