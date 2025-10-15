@@ -187,15 +187,15 @@ LEAN_EXPORT lean_obj_res lean_pq_options(b_lean_obj_arg conn) {
 LEAN_EXPORT lean_obj_res lean_pq_status(b_lean_obj_arg conn) {
   Connection *connection = pq_connection_get_handle(conn);
   ConnStatusType status = PQstatus(connection->conn);
-  lean_object * status_result = lean_alloc_ctor(status, 0, 0);
-  return lean_io_result_mk_ok(status_result);
+  lean_object * status_obj = lean_alloc_ctor(status, 0, 0);
+  return lean_io_result_mk_ok(status_obj);
 }
 
 LEAN_EXPORT lean_obj_res lean_pq_transaction_status(b_lean_obj_arg conn) {
   Connection *connection = pq_connection_get_handle(conn);
   PGTransactionStatusType transaction_status = PQtransactionStatus(connection->conn);
-  lean_object * transaction_status_result = lean_alloc_ctor(transaction_status, 0, 0);
-  return lean_io_result_mk_ok(transaction_status_result);
+  lean_object * transaction_status_obj = lean_alloc_ctor(transaction_status, 0, 0);
+  return lean_io_result_mk_ok(transaction_status_obj);
 }
 
 LEAN_EXPORT lean_obj_res lean_pq_parameter_status(b_lean_obj_arg conn, b_lean_obj_arg param_name) {
@@ -208,15 +208,15 @@ LEAN_EXPORT lean_obj_res lean_pq_parameter_status(b_lean_obj_arg conn, b_lean_ob
 LEAN_EXPORT lean_obj_res lean_pq_protocol_version(b_lean_obj_arg conn) {
   Connection *connection = pq_connection_get_handle(conn);
   int protocol_version = PQprotocolVersion(connection->conn);
-  lean_object * protocol_version_result = lean_alloc_ctor(protocol_version, 0, 0);
-  return lean_io_result_mk_ok(protocol_version_result);
+  lean_object * protocol_version_obj = lean_alloc_ctor(protocol_version, 0, 0);
+  return lean_io_result_mk_ok(protocol_version_obj);
 }
 
 LEAN_EXPORT lean_obj_res lean_pq_server_version(b_lean_obj_arg conn) {
   Connection *connection = pq_connection_get_handle(conn);
   int server_version = PQserverVersion(connection->conn);
-  lean_object * server_version_result = lean_alloc_ctor(server_version, 0, 0);
-  return lean_io_result_mk_ok(server_version_result);
+  lean_object * server_version_obj = lean_alloc_ctor(server_version, 0, 0);
+  return lean_io_result_mk_ok(server_version_obj);
 }
 
 LEAN_EXPORT lean_obj_res lean_pq_error_message(b_lean_obj_arg conn) {
@@ -228,8 +228,8 @@ LEAN_EXPORT lean_obj_res lean_pq_error_message(b_lean_obj_arg conn) {
 LEAN_EXPORT lean_obj_res lean_pq_socket(b_lean_obj_arg conn) {
   Connection *connection = pq_connection_get_handle(conn);
   int socket = PQsocket(connection->conn);
-  lean_object * socket_result = lean_alloc_ctor(socket, 0, 0);
-  return lean_io_result_mk_ok(socket_result);
+  lean_object * socket_obj = lean_alloc_ctor(socket, 0, 0);
+  return lean_io_result_mk_ok(socket_obj);
 }
 
 // [Command Execution Functions](https://www.postgresql.org/docs/current/libpq-exec.html)
@@ -238,7 +238,7 @@ LEAN_EXPORT lean_obj_res lean_pq_exec(b_lean_obj_arg conn, b_lean_obj_arg cmd) {
   Connection *connection = pq_connection_get_handle(conn);
   const char * cmd_cstr = lean_string_cstr(cmd);
   PGresult * result = PQexec(connection->conn, cmd_cstr);
-  lean_object * result_result = lean_alloc_ctor(result, 0, 0);
-  return lean_io_result_mk_ok(result_result);
+  lean_object * result_obj = lean_box_usize((size_t)result);
+  return lean_io_result_mk_ok(result_obj);
 }
 

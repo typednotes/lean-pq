@@ -152,12 +152,17 @@ opaque PqErrorMessage (conn : Handle): EIO LeanPq.Error String
 @[extern "lean_pq_socket"]
 opaque PqSocket (conn : Handle): EIO LeanPq.Error Int
 
+/--
+PostgreSQL result object returned by `PQexec()`.
+
+This object contains the result of a database query.
+-/
+opaque PGresult: Type
+
 @[extern "lean_pq_exec"]
-opaque PqExec (conn : Handle) (command : String): EIO LeanPq.Error Handle
+opaque PqExec (conn : Handle) (command : String): EIO LeanPq.Error PGresult
 
-Result
-
-@[extern "lean_pq_exec_params"]
-opaque PqExecParams (conn : Handle) (nParams : Int) (paramValues : Array String) (paramLengths : Array Int) (paramFormats : Array Int) (resultFormat : Int): EIO LeanPq.Error Handle
+-- @[extern "lean_pq_exec_params"]
+-- opaque PqExecParams (conn : Handle) (nParams : Int) (paramValues : Array String) (paramLengths : Array Int) (paramFormats : Array Int) (resultFormat : Int): EIO LeanPq.Error Handle
 
 end Extern
