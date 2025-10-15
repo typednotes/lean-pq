@@ -112,7 +112,7 @@ PostgreSQL transaction status values returned by `PQtransactionStatus()`.
 
 These values indicate the current state of the database transaction.
 -/
-inductive TransactionStatus where
+inductive PGTransactionStatus where
   /-- Server is idle and ready to accept commands. -/
   | idle
   /-- Server is processing a command. -/
@@ -126,7 +126,7 @@ inductive TransactionStatus where
   deriving BEq, DecidableEq, Repr, Inhabited
 
 
-instance : ToString TransactionStatus where
+instance : ToString PGTransactionStatus where
   toString := fun
   | .idle => s!"Idle."
   | .active => s!"Active."
@@ -135,14 +135,29 @@ instance : ToString TransactionStatus where
   | .unknown => s!"Unknown."
 
 @[extern "lean_pq_transaction_status"]
-opaque PqTransactionStatus (conn : Handle): EIO LeanPq.Error TransactionStatus
+opaque PqTransactionStatus (conn : Handle): EIO LeanPq.Error PGTransactionStatus
 
 @[extern "lean_pq_parameter_status"]
 opaque PqParameterStatus (conn : Handle) (param_name : String): EIO LeanPq.Error String
 
+@[extern "lean_pq_protocol_version"]
+opaque PqProtocolVersion (conn : Handle): EIO LeanPq.Error Int
 
+@[extern "lean_pq_server_version"]
+opaque PqServerVersion (conn : Handle): EIO LeanPq.Error Int
 
+@[extern "lean_pq_error_message"]
+opaque PqErrorMessage (conn : Handle): EIO LeanPq.Error String
 
+@[extern "lean_pq_socket"]
+opaque PqSocket (conn : Handle): EIO LeanPq.Error Int
 
+@[extern "lean_pq_exec"]
+opaque PqExec (conn : Handle) (command : String): EIO LeanPq.Error Handle
+
+Result
+
+@[extern "lean_pq_exec_params"]
+opaque PqExecParams (conn : Handle) (nParams : Int) (paramValues : Array String) (paramLengths : Array Int) (paramFormats : Array Int) (resultFormat : Int): EIO LeanPq.Error Handle
 
 end Extern
