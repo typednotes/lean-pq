@@ -14,11 +14,12 @@ def testConnect : EIO LeanPq.Error String := do
   let conninfo := "host=localhost port=5432 user=postgres password=postgres dbname=postgres"
   let conn ← PqConnectDb conninfo
   let db ← PqDb conn
-  return db
+  let status ← PqStatus conn
+  return toString status
 
 def main : IO Unit := do
-  let db ← testConnect.toIO (fun e => IO.Error.otherError 0 (toString e))
-  IO.println db
+  let status ← testConnect.toIO (fun e => IO.Error.otherError 0 (toString e))
+  IO.println status
   IO.println s!"Test"
   -- let keywords := #["host", "port", "user", "password", "dbname"]
   -- let values := #["localhost", "5432", "postgres", "postgres", "postgres"]

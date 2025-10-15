@@ -7,11 +7,17 @@
 /*
 LibPQ documentation:
 https://www.postgresql.org/docs/current/libpq.html
+
+https://gist.github.com/ydewit/7ab62be1bd0fea5bd53b48d23914dd6b#4-scalar-values-in-lean-s-ffi
 */
+
 
 #define DEBUG 1
 
 #define LEAN_PQ_CONNECTION_FAILED_INIT 100
+
+// [Database Connection Control Functions](https://www.postgresql.org/docs/current/libpq-connect.html)
+
 
 struct connection {
   PGconn *conn;
@@ -99,7 +105,6 @@ LEAN_EXPORT lean_obj_res lean_pq_connect_db_params(b_lean_obj_arg keywords, b_le
 
 // PQconnectdb
 LEAN_EXPORT lean_obj_res lean_pq_connect_db(b_lean_obj_arg conninfo) {
-  fprintf(stdout, "lean_pq_connect_db\n");
   initialize();
   const char *conninfo_cstr = lean_string_cstr(conninfo); // Convert Lean string to C string
   PGconn *conn = PQconnectdb(conninfo_cstr); // Create the libpq handle
@@ -129,8 +134,59 @@ LEAN_EXPORT lean_obj_res lean_pq_reset(b_lean_obj_arg conn) {
   return lean_io_result_mk_ok(lean_box(0));
 }
 
+// [Connection Status Functions](https://www.postgresql.org/docs/current/libpq-status.html)
+
 LEAN_EXPORT lean_obj_res lean_pq_db(b_lean_obj_arg conn) {
   Connection *connection = pq_connection_get_handle(conn);
   const char * db = PQdb(connection->conn);
   return lean_io_result_mk_ok(lean_mk_string(db));
+}
+
+LEAN_EXPORT lean_obj_res lean_pq_user(b_lean_obj_arg conn) {
+  Connection *connection = pq_connection_get_handle(conn);
+  const char * user = PQuser(connection->conn);
+  return lean_io_result_mk_ok(lean_mk_string(user));
+}
+
+LEAN_EXPORT lean_obj_res lean_pq_pass(b_lean_obj_arg conn) {
+  Connection *connection = pq_connection_get_handle(conn);
+  const char * pass = PQpass(connection->conn);
+  return lean_io_result_mk_ok(lean_mk_string(pass));
+}
+
+LEAN_EXPORT lean_obj_res lean_pq_host(b_lean_obj_arg conn) {
+  Connection *connection = pq_connection_get_handle(conn);
+  const char * host = PQhost(connection->conn);
+  return lean_io_result_mk_ok(lean_mk_string(host));
+}
+
+LEAN_EXPORT lean_obj_res lean_pq_host_addr(b_lean_obj_arg conn) {
+  Connection *connection = pq_connection_get_handle(conn);
+  const char * host = PQhostaddr(connection->conn);
+  return lean_io_result_mk_ok(lean_mk_string(host));
+}
+
+LEAN_EXPORT lean_obj_res lean_pq_port(b_lean_obj_arg conn) {
+  Connection *connection = pq_connection_get_handle(conn);
+  const char * port = PQport(connection->conn);
+  return lean_io_result_mk_ok(lean_mk_string(port));
+}
+
+LEAN_EXPORT lean_obj_res lean_pq_tty(b_lean_obj_arg conn) {
+  Connection *connection = pq_connection_get_handle(conn);
+  const char * tty = PQtty(connection->conn);
+  return lean_io_result_mk_ok(lean_mk_string(tty));
+}
+
+LEAN_EXPORT lean_obj_res lean_pq_options(b_lean_obj_arg conn) {
+  Connection *connection = pq_connection_get_handle(conn);
+  const char * options = PQoptions(connection->conn);
+  return lean_io_result_mk_ok(lean_mk_string(options));
+}
+
+LEAN_EXPORT lean_obj_res lean_pq_status(b_lean_obj_arg conn) {
+  Connection *connection = pq_connection_get_handle(conn);
+  ConnStatusType status = PQstatus(connection->conn);
+  lean_object * status_result = lean_alloc_ctor(status, 0, 0);
+  return lean_io_result_mk_ok(status_result);
 }
