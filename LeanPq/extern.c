@@ -190,3 +190,18 @@ LEAN_EXPORT lean_obj_res lean_pq_status(b_lean_obj_arg conn) {
   lean_object * status_result = lean_alloc_ctor(status, 0, 0);
   return lean_io_result_mk_ok(status_result);
 }
+
+LEAN_EXPORT lean_obj_res lean_pq_transaction_status(b_lean_obj_arg conn) {
+  Connection *connection = pq_connection_get_handle(conn);
+  PGTransactionStatusType transaction_status = PQtransactionStatus(connection->conn);
+  lean_object * transaction_status_result = lean_alloc_ctor(transaction_status, 0, 0);
+  return lean_io_result_mk_ok(transaction_status_result);
+}
+
+LEAN_EXPORT lean_obj_res lean_pq_parameter_status(b_lean_obj_arg conn, b_lean_obj_arg param_name) {
+  Connection *connection = pq_connection_get_handle(conn);
+  const char * param_name_cstr = lean_string_cstr(param_name);
+  const char * param_value = PQparameterStatus(connection->conn, param_name_cstr);
+  return lean_io_result_mk_ok(lean_mk_string(param_value));
+}
+

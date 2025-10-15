@@ -47,21 +47,41 @@ opaque PqTty (conn : Handle): EIO LeanPq.Error String
 @[extern "lean_pq_options"]
 opaque PqOptions (conn : Handle): EIO LeanPq.Error String
 
+/--
+PostgreSQL connection status values returned by `PQstatus()`.
+
+Each value corresponds to a specific state in the PostgreSQL connection lifecycle.
+-/
 inductive ConnStatus where
+  /-- Connection is ready for use. -/
   | connectionOk
+  /-- Connection is bad and cannot be used. -/
   | connectionBad
+  /-- Connection is being established. -/
   | connectionStarted
+  /-- Connection has been made. -/
   | connectionMade
+  /-- Waiting for a response from the server. -/
   | connectionAwaitingResponse
+  /-- Authentication completed successfully. -/
   | connectionAuthOk
+  /-- Environment variables have been set. -/
   | connectionSetEnv
+  /-- SSL startup is in progress. -/
   | connectionSslStartup
+  /-- Connection is needed but not yet established. -/
   | connectionNeeded
+  /-- Connection is being checked for writability. -/
   | connectionCheckWritable
+  /-- Connection is consuming input. -/
   | connectionConsume
+  /-- GSS startup is in progress. -/
   | connectionGssStartup
+  /-- Connection is being checked for target. -/
   | connectionCheckTarget
+  /-- Connection is being checked for standby. -/
   | connectionCheckStandby
+  /-- Connection has been allocated. -/
   | connectionAllocated
   deriving BEq, DecidableEq, Repr, Inhabited
 
@@ -86,5 +106,43 @@ instance : ToString ConnStatus where
 
 @[extern "lean_pq_status"]
 opaque PqStatus (conn : Handle): EIO LeanPq.Error ConnStatus
+
+/--
+PostgreSQL transaction status values returned by `PQtransactionStatus()`.
+
+These values indicate the current state of the database transaction.
+-/
+inductive TransactionStatus where
+  /-- Server is idle and ready to accept commands. -/
+  | idle
+  /-- Server is processing a command. -/
+  | active
+  /-- Server is in a transaction block. -/
+  | inTransaction
+  /-- Server is in a failed transaction block. -/
+  | inError
+  /-- Server status is unknown (e.g., connection lost). -/
+  | unknown
+  deriving BEq, DecidableEq, Repr, Inhabited
+
+
+instance : ToString TransactionStatus where
+  toString := fun
+  | .idle => s!"Idle."
+  | .active => s!"Active."
+  | .inTransaction => s!"In Transaction."
+  | .inError => s!"In Error."
+  | .unknown => s!"Unknown."
+
+@[extern "lean_pq_transaction_status"]
+opaque PqTransactionStatus (conn : Handle): EIO LeanPq.Error TransactionStatus
+
+@[extern "lean_pq_parameter_status"]
+opaque PqParameterStatus (conn : Handle) (param_name : String): EIO LeanPq.Error String
+
+
+
+
+
 
 end Extern
