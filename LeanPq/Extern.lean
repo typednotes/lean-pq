@@ -162,7 +162,20 @@ opaque PGresult: Type
 @[extern "lean_pq_exec"]
 opaque PqExec (conn : Handle) (command : String): EIO LeanPq.Error PGresult
 
--- @[extern "lean_pq_exec_params"]
--- opaque PqExecParams (conn : Handle) (nParams : Int) (paramValues : Array String) (paramLengths : Array Int) (paramFormats : Array Int) (resultFormat : Int): EIO LeanPq.Error Handle
+@[extern "lean_pq_exec_params"]
+opaque PqExecParams (conn : Handle) (nParams : Int) (paramValues : Array String) (paramLengths : Array Int) (paramFormats : Array Int) (resultFormat : Int): EIO LeanPq.Error Handle
+
+@[extern "lean_pq_prepare"]
+opaque PqPrepare (conn : Handle) (stmtName : String) (query : String) (nParams : Int) (paramTypes : Array Int): EIO LeanPq.Error PGresult
+
+@[extern "lean_pq_exec_prepared"]
+opaque PqExecPrepared (conn : Handle) (stmtName : String) (nParams : Int) (paramValues : Array String) (paramLengths : Array Int) (paramFormats : Array Int) (resultFormat : Int): EIO LeanPq.Error PGresult
+
+/- Add the missing functions -/
+
+@[extern "lean_pq_clear"]
+opaque PqClear (result : PGresult): EIO LeanPq.Error Unit
+
+
 
 end Extern

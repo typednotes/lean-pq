@@ -242,3 +242,58 @@ LEAN_EXPORT lean_obj_res lean_pq_exec(b_lean_obj_arg conn, b_lean_obj_arg cmd) {
   return lean_io_result_mk_ok(result_obj);
 }
 
+LEAN_EXPORT lean_obj_res lean_pq_exec_params(
+  b_lean_obj_arg conn,
+  b_lean_obj_arg cmd,
+  b_lean_obj_arg nParams,
+  b_lean_obj_arg paramTypes,
+  b_lean_obj_arg paramValues,
+  b_lean_obj_arg paramLengths,
+  b_lean_obj_arg paramFormats,
+  b_lean_obj_arg resultFormat) {
+  Connection *connection = pq_connection_get_handle(conn);
+  const char * cmd_cstr = lean_string_cstr(cmd);
+  int nParams_int = lean_unbox(nParams);
+  const Oid * paramTypes_oid = (const Oid *)lean_unbox(paramTypes);
+  const char * const * paramValues_cstr_array = (const char **)lean_unbox(paramValues);
+  const int * paramLengths_int = (const int *)lean_unbox(paramLengths);
+  const int * paramFormats_int = (const int *)lean_unbox(paramFormats);
+  int resultFormat_int = lean_unbox(resultFormat);
+  PGresult * result = PQexecParams(connection->conn, cmd_cstr, nParams_int, paramTypes_oid, paramValues_cstr_array, paramLengths_int, paramFormats_int, resultFormat_int);
+  lean_object * result_obj = lean_box_usize((size_t)result);
+  return lean_io_result_mk_ok(result_obj);
+}
+
+LEAN_EXPORT lean_obj_res lean_pq_prepare(b_lean_obj_arg conn, b_lean_obj_arg stmtName, b_lean_obj_arg query, b_lean_obj_arg nParams, b_lean_obj_arg paramTypes) {
+  Connection *connection = pq_connection_get_handle(conn);
+  const char * stmtName_cstr = lean_string_cstr(stmtName);
+  const char * query_cstr = lean_string_cstr(query);
+  const int nParams_int = lean_unbox(nParams);
+  const Oid * paramTypes_oid = (const Oid *)lean_unbox(paramTypes);
+  PGresult * result = PQprepare(connection->conn, stmtName_cstr, query_cstr, nParams_int, paramTypes_oid);
+  lean_object * result_obj = lean_box_usize((size_t)result);
+  return lean_io_result_mk_ok(result_obj);
+}
+
+LEAN_EXPORT lean_obj_res lean_pq_exec_prepared(b_lean_obj_arg conn, b_lean_obj_arg stmtName, b_lean_obj_arg nParams, b_lean_obj_arg paramValues, b_lean_obj_arg paramLengths, b_lean_obj_arg paramFormats, b_lean_obj_arg resultFormat) {
+  Connection *connection = pq_connection_get_handle(conn);
+  const char * stmtName_cstr = lean_string_cstr(stmtName);
+  const int nParams_int = lean_unbox(nParams);
+  const char * const * paramValues_cstr_array = (const char **)lean_unbox(paramValues);
+  const int * paramLengths_int = (const int *)lean_unbox(paramLengths);
+  const int * paramFormats_int = (const int *)lean_unbox(paramFormats);
+  int resultFormat_int = lean_unbox(resultFormat);
+  PGresult * result = PQexecPrepared(connection->conn, stmtName_cstr, nParams_int, paramValues_cstr_array, paramLengths_int, paramFormats_int, resultFormat_int);
+  lean_object * result_obj = lean_box_usize((size_t)result);
+  return lean_io_result_mk_ok(result_obj);
+}
+
+/* Add tegh missing functions */
+
+// [Result Functions](https://www.postgresql.org/docs/current/libpq-exec.html)
+
+LEAN_EXPORT lean_obj_res lean_pq_clear(b_lean_obj_arg result) {
+  PGresult * result_obj = (PGresult *)lean_unbox(result);
+  PQclear(result_obj);
+  return lean_io_result_mk_ok(lean_box(0));
+}
