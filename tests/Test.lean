@@ -8,7 +8,6 @@ open Extern
 open Std
 open ToString
 
-def f (x: Nat) : Nat := x + 1
 
 def testConnect : EIO LeanPq.Error PGresult := do
   let conninfo := "host=localhost port=5432 user=postgres password=postgres dbname=postgres"

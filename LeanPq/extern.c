@@ -338,7 +338,7 @@ LEAN_EXPORT lean_obj_res lean_pq_exec_prepared(b_lean_obj_arg conn, b_lean_obj_a
 // PQresultStatus - Returns the result status of the command
 // Documentation: https://www.postgresql.org/docs/current/libpq-exec.html#LIBPQ-PQRESULTSTATUS
 LEAN_EXPORT lean_obj_res lean_pq_result_status(b_lean_obj_arg result) {
-  PGresult * result_obj = (PGresult *)lean_unbox(result);
+  PGresult * result_obj = (PGresult *)lean_unbox_usize(result);
   ExecStatusType status = PQresultStatus(result_obj);
   lean_object * status_obj = lean_alloc_ctor(status, 0, 0);
   return lean_io_result_mk_ok(status_obj);
@@ -347,7 +347,7 @@ LEAN_EXPORT lean_obj_res lean_pq_result_status(b_lean_obj_arg result) {
 // PQresStatus - Converts the enumerated type returned by PQresultStatus into a string constant
 // Documentation: https://www.postgresql.org/docs/current/libpq-exec.html#LIBPQ-PQRESSTATUS
 LEAN_EXPORT lean_obj_res lean_pq_res_status(b_lean_obj_arg result) {
-  PGresult * result_obj = (PGresult *)lean_unbox(result);
+  PGresult * result_obj = (PGresult *)lean_unbox_usize(result);
   ExecStatusType status = PQresultStatus(result_obj);
   lean_object * status_obj = lean_alloc_ctor(status, 0, 0);
   return lean_io_result_mk_ok(status_obj);
@@ -356,7 +356,7 @@ LEAN_EXPORT lean_obj_res lean_pq_res_status(b_lean_obj_arg result) {
 // PQresultErrorMessage - Returns the error message associated with the command
 // Documentation: https://www.postgresql.org/docs/current/libpq-exec.html#LIBPQ-PQRESULTERRORMESSAGE
 LEAN_EXPORT lean_obj_res lean_pq_result_error_message(b_lean_obj_arg result) {
-  PGresult * result_obj = (PGresult *)lean_unbox(result);
+  PGresult * result_obj = (PGresult *)lean_unbox_usize(result);
   const char * error_message = PQresultErrorMessage(result_obj);
   return lean_io_result_mk_ok(lean_mk_string(error_message));
 }
@@ -364,7 +364,7 @@ LEAN_EXPORT lean_obj_res lean_pq_result_error_message(b_lean_obj_arg result) {
 // PQresultErrorField - Returns an individual field of an error report
 // Documentation: https://www.postgresql.org/docs/current/libpq-exec.html#LIBPQ-PQRESULTERRORFIELD
 LEAN_EXPORT lean_obj_res lean_pq_result_error_field(b_lean_obj_arg result, b_lean_obj_arg fieldcode) {
-  PGresult * result_obj = (PGresult *)lean_unbox(result);
+  PGresult * result_obj = (PGresult *)lean_unbox_usize(result);
   int fieldcode_int = lean_unbox(fieldcode);
   const char * error_field = PQresultErrorField(result_obj, fieldcode_int);
   return lean_io_result_mk_ok(lean_mk_string(error_field));
@@ -374,7 +374,7 @@ LEAN_EXPORT lean_obj_res lean_pq_result_error_field(b_lean_obj_arg result, b_lea
 // PQntuples - Returns the number of rows (tuples) in the query result
 // Documentation: https://www.postgresql.org/docs/current/libpq-exec.html#LIBPQ-PQNTUPLES
 LEAN_EXPORT lean_obj_res lean_pq_ntuples(b_lean_obj_arg result) {
-  PGresult * result_obj = (PGresult *)lean_unbox(result);
+  PGresult * result_obj = (PGresult *)lean_unbox_usize(result);
   int ntuples = PQntuples(result_obj);
   return lean_io_result_mk_ok(lean_box(ntuples));
 }
@@ -382,7 +382,7 @@ LEAN_EXPORT lean_obj_res lean_pq_ntuples(b_lean_obj_arg result) {
 // PQnfields - Returns the number of columns (fields) in each row of the query result
 // Documentation: https://www.postgresql.org/docs/current/libpq-exec.html#LIBPQ-PQNFIELDS
 LEAN_EXPORT lean_obj_res lean_pq_nfields(b_lean_obj_arg result) {
-  PGresult * result_obj = (PGresult *)lean_unbox(result);
+  PGresult * result_obj = (PGresult *)lean_unbox_usize(result);
   int nfields = PQnfields(result_obj);
   return lean_io_result_mk_ok(lean_box(nfields));
 }
@@ -390,7 +390,7 @@ LEAN_EXPORT lean_obj_res lean_pq_nfields(b_lean_obj_arg result) {
 // PQfname - Returns the column name associated with the given column number
 // Documentation: https://www.postgresql.org/docs/current/libpq-exec.html#LIBPQ-PQFNAME
 LEAN_EXPORT lean_obj_res lean_pq_fname(b_lean_obj_arg result, b_lean_obj_arg field_num) {
-  PGresult * result_obj = (PGresult *)lean_unbox(result);
+  PGresult * result_obj = (PGresult *)lean_unbox_usize(result);
   int field_num_int = lean_unbox(field_num);
   const char * fname = PQfname(result_obj, field_num_int);
   return lean_io_result_mk_ok(lean_mk_string(fname));
@@ -399,7 +399,7 @@ LEAN_EXPORT lean_obj_res lean_pq_fname(b_lean_obj_arg result, b_lean_obj_arg fie
 // PQfnumber - Returns the column number associated with the given column name
 // Documentation: https://www.postgresql.org/docs/current/libpq-exec.html#LIBPQ-PQFNUMBER
 LEAN_EXPORT lean_obj_res lean_pq_fnumber(b_lean_obj_arg result, b_lean_obj_arg field_name) {
-  PGresult * result_obj = (PGresult *)lean_unbox(result);
+  PGresult * result_obj = (PGresult *)lean_unbox_usize(result);
   const char * field_name_cstr = lean_string_cstr(field_name);
   int fnumber = PQfnumber(result_obj, field_name_cstr);
   return lean_io_result_mk_ok(lean_box(fnumber));
@@ -408,7 +408,7 @@ LEAN_EXPORT lean_obj_res lean_pq_fnumber(b_lean_obj_arg result, b_lean_obj_arg f
 // PQftable - Returns the OID of the table from which the given column was fetched
 // Documentation: https://www.postgresql.org/docs/current/libpq-exec.html#LIBPQ-PQFTABLE
 LEAN_EXPORT lean_obj_res lean_pq_ftable(b_lean_obj_arg result, b_lean_obj_arg field_num) {
-  PGresult * result_obj = (PGresult *)lean_unbox(result);
+  PGresult * result_obj = (PGresult *)lean_unbox_usize(result);
   int field_num_int = lean_unbox(field_num);
   Oid ftable = PQftable(result_obj, field_num_int);
   lean_object * ftable_obj = lean_box_usize((size_t)ftable);
@@ -418,7 +418,7 @@ LEAN_EXPORT lean_obj_res lean_pq_ftable(b_lean_obj_arg result, b_lean_obj_arg fi
 // PQftablecol - Returns the column number (within its table) of the column making up the specified query result column
 // Documentation: https://www.postgresql.org/docs/current/libpq-exec.html#LIBPQ-PQFTABLECOL
 LEAN_EXPORT lean_obj_res lean_pq_ftablecol(b_lean_obj_arg result, b_lean_obj_arg field_num) {
-  PGresult * result_obj = (PGresult *)lean_unbox(result);
+  PGresult * result_obj = (PGresult *)lean_unbox_usize(result);
   int field_num_int = lean_unbox(field_num);
   int ftablecol = PQftablecol(result_obj, field_num_int);
   return lean_io_result_mk_ok(lean_box(ftablecol));
@@ -427,7 +427,7 @@ LEAN_EXPORT lean_obj_res lean_pq_ftablecol(b_lean_obj_arg result, b_lean_obj_arg
 // PQfformat - Returns the format code indicating the format of the given column
 // Documentation: https://www.postgresql.org/docs/current/libpq-exec.html#LIBPQ-PQFFORMAT
 LEAN_EXPORT lean_obj_res lean_pq_fformat(b_lean_obj_arg result, b_lean_obj_arg field_num) {
-  PGresult * result_obj = (PGresult *)lean_unbox(result);
+  PGresult * result_obj = (PGresult *)lean_unbox_usize(result);
   int field_num_int = lean_unbox(field_num);
   int fformat = PQfformat(result_obj, field_num_int);
   return lean_io_result_mk_ok(lean_box(fformat));
@@ -436,7 +436,7 @@ LEAN_EXPORT lean_obj_res lean_pq_fformat(b_lean_obj_arg result, b_lean_obj_arg f
 // PQftype - Returns the data type associated with the given column number
 // Documentation: https://www.postgresql.org/docs/current/libpq-exec.html#LIBPQ-PQFTYPE
 LEAN_EXPORT lean_obj_res lean_pq_ftype(b_lean_obj_arg result, b_lean_obj_arg field_num) {
-  PGresult * result_obj = (PGresult *)lean_unbox(result);
+  PGresult * result_obj = (PGresult *)lean_unbox_usize(result);
   int field_num_int = lean_unbox(field_num);
   Oid ftype = PQftype(result_obj, field_num_int);
   lean_object * ftype_obj = lean_box_usize((size_t)ftype);
@@ -446,7 +446,7 @@ LEAN_EXPORT lean_obj_res lean_pq_ftype(b_lean_obj_arg result, b_lean_obj_arg fie
 // PQfsize - Returns the size in bytes of the type associated with the given column number
 // Documentation: https://www.postgresql.org/docs/current/libpq-exec.html#LIBPQ-PQFSIZE
 LEAN_EXPORT lean_obj_res lean_pq_fsize(b_lean_obj_arg result, b_lean_obj_arg field_num) {
-  PGresult * result_obj = (PGresult *)lean_unbox(result);
+  PGresult * result_obj = (PGresult *)lean_unbox_usize(result);
   int field_num_int = lean_unbox(field_num);
   int fsize = PQfsize(result_obj, field_num_int);
   return lean_io_result_mk_ok(lean_box(fsize));
@@ -455,7 +455,7 @@ LEAN_EXPORT lean_obj_res lean_pq_fsize(b_lean_obj_arg result, b_lean_obj_arg fie
 // PQfmod - Returns the type modifier of the type associated with the given column number
 // Documentation: https://www.postgresql.org/docs/current/libpq-exec.html#LIBPQ-PQFMOD
 LEAN_EXPORT lean_obj_res lean_pq_fmod(b_lean_obj_arg result, b_lean_obj_arg field_num) {
-  PGresult * result_obj = (PGresult *)lean_unbox(result);
+  PGresult * result_obj = (PGresult *)lean_unbox_usize(result);
   int field_num_int = lean_unbox(field_num);
   int fmod = PQfmod(result_obj, field_num_int);
   return lean_io_result_mk_ok(lean_box(fmod));
@@ -464,7 +464,7 @@ LEAN_EXPORT lean_obj_res lean_pq_fmod(b_lean_obj_arg result, b_lean_obj_arg fiel
 // PQbinaryTuples - Returns 1 if the PGresult contains binary tuple data, 0 if it contains text data
 // Documentation: https://www.postgresql.org/docs/current/libpq-exec.html#LIBPQ-PQBINARYTUPLES
 LEAN_EXPORT lean_obj_res lean_pq_binary_tuples(b_lean_obj_arg result) {
-  PGresult * result_obj = (PGresult *)lean_unbox(result);
+  PGresult * result_obj = (PGresult *)lean_unbox_usize(result);
   int binary_tuples = PQbinaryTuples(result_obj);
   return lean_io_result_mk_ok(lean_box(binary_tuples));
 }
@@ -473,7 +473,7 @@ LEAN_EXPORT lean_obj_res lean_pq_binary_tuples(b_lean_obj_arg result) {
 // PQcmdStatus - Returns the command status tag from the last SQL command executed
 // Documentation: https://www.postgresql.org/docs/current/libpq-exec.html#LIBPQ-PQCMDSTATUS
 LEAN_EXPORT lean_obj_res lean_pq_cmd_status(b_lean_obj_arg result) {
-  PGresult * result_obj = (PGresult *)lean_unbox(result);
+  PGresult * result_obj = (PGresult *)lean_unbox_usize(result);
   const char * cmd_status = PQcmdStatus(result_obj);
   return lean_io_result_mk_ok(lean_mk_string(cmd_status));
 }
@@ -481,7 +481,7 @@ LEAN_EXPORT lean_obj_res lean_pq_cmd_status(b_lean_obj_arg result) {
 // PQcmdTuples - Returns the number of rows affected by the SQL command
 // Documentation: https://www.postgresql.org/docs/current/libpq-exec.html#LIBPQ-PQCMDTUPLES
 LEAN_EXPORT lean_obj_res lean_pq_cmd_tuples(b_lean_obj_arg result) {
-  PGresult * result_obj = (PGresult *)lean_unbox(result);
+  PGresult * result_obj = (PGresult *)lean_unbox_usize(result);
   const char * cmd_tuples = PQcmdTuples(result_obj);
   return lean_io_result_mk_ok(lean_mk_string(cmd_tuples));
 }
@@ -489,7 +489,7 @@ LEAN_EXPORT lean_obj_res lean_pq_cmd_tuples(b_lean_obj_arg result) {
 // PQoidValue - Returns the OID of the inserted row, if the SQL command was an INSERT that inserted exactly one row into a table that has OIDs
 // Documentation: https://www.postgresql.org/docs/current/libpq-exec.html#LIBPQ-PQOIDVALUE
 LEAN_EXPORT lean_obj_res lean_pq_oid_value(b_lean_obj_arg result) {
-  PGresult * result_obj = (PGresult *)lean_unbox(result);
+  PGresult * result_obj = (PGresult *)lean_unbox_usize(result);
   Oid oid_value = PQoidValue(result_obj);
   lean_object * oid_value_obj = lean_box_usize((size_t)oid_value);
   return lean_io_result_mk_ok(oid_value_obj);
@@ -498,7 +498,7 @@ LEAN_EXPORT lean_obj_res lean_pq_oid_value(b_lean_obj_arg result) {
 // PQoidStatus - Returns a string with the OID of the inserted row, if the SQL command was an INSERT that inserted exactly one row into a table that has OIDs
 // Documentation: https://www.postgresql.org/docs/current/libpq-exec.html#LIBPQ-PQOIDSTATUS
 LEAN_EXPORT lean_obj_res lean_pq_oid_status(b_lean_obj_arg result) {
-  PGresult * result_obj = (PGresult *)lean_unbox(result);
+  PGresult * result_obj = (PGresult *)lean_unbox_usize(result);
   const char * oid_status = PQoidStatus(result_obj);
   return lean_io_result_mk_ok(lean_mk_string(oid_status));
 }
@@ -507,7 +507,7 @@ LEAN_EXPORT lean_obj_res lean_pq_oid_status(b_lean_obj_arg result) {
 // PQgetvalue - Returns a single field value of one row of a PGresult
 // Documentation: https://www.postgresql.org/docs/current/libpq-exec.html#LIBPQ-PQGETVALUE
 LEAN_EXPORT lean_obj_res lean_pq_getvalue(b_lean_obj_arg result, b_lean_obj_arg row_num, b_lean_obj_arg field_num) {
-  PGresult * result_obj = (PGresult *)lean_unbox(result);
+  PGresult * result_obj = (PGresult *)lean_unbox_usize(result);
   int row_num_int = lean_unbox(row_num);
   int field_num_int = lean_unbox(field_num);
   const char * value = PQgetvalue(result_obj, row_num_int, field_num_int);
@@ -517,7 +517,7 @@ LEAN_EXPORT lean_obj_res lean_pq_getvalue(b_lean_obj_arg result, b_lean_obj_arg 
 // PQgetisnull - Tests a field for a null value
 // Documentation: https://www.postgresql.org/docs/current/libpq-exec.html#LIBPQ-PQGETISNULL
 LEAN_EXPORT lean_obj_res lean_pq_getisnull(b_lean_obj_arg result, b_lean_obj_arg row_num, b_lean_obj_arg field_num) {
-  PGresult * result_obj = (PGresult *)lean_unbox(result);
+  PGresult * result_obj = (PGresult *)lean_unbox_usize(result);
   int row_num_int = lean_unbox(row_num);
   int field_num_int = lean_unbox(field_num);
   int is_null = PQgetisnull(result_obj, row_num_int, field_num_int);
@@ -527,7 +527,7 @@ LEAN_EXPORT lean_obj_res lean_pq_getisnull(b_lean_obj_arg result, b_lean_obj_arg
 // PQgetlength - Returns the actual length of a field value in bytes
 // Documentation: https://www.postgresql.org/docs/current/libpq-exec.html#LIBPQ-PQGETLENGTH
 LEAN_EXPORT lean_obj_res lean_pq_getlength(b_lean_obj_arg result, b_lean_obj_arg row_num, b_lean_obj_arg field_num) {
-  PGresult * result_obj = (PGresult *)lean_unbox(result);
+  PGresult * result_obj = (PGresult *)lean_unbox_usize(result);
   int row_num_int = lean_unbox(row_num);
   int field_num_int = lean_unbox(field_num);
   int length = PQgetlength(result_obj, row_num_int, field_num_int);
@@ -537,7 +537,7 @@ LEAN_EXPORT lean_obj_res lean_pq_getlength(b_lean_obj_arg result, b_lean_obj_arg
 // PQnparams - Returns the number of parameters of a prepared statement
 // Documentation: https://www.postgresql.org/docs/current/libpq-exec.html#LIBPQ-PQNPARAMS
 LEAN_EXPORT lean_obj_res lean_pq_nparams(b_lean_obj_arg result) {
-  PGresult * result_obj = (PGresult *)lean_unbox(result);
+  PGresult * result_obj = (PGresult *)lean_unbox_usize(result);
   int nparams = PQnparams(result_obj);
   return lean_io_result_mk_ok(lean_box(nparams));
 }
@@ -545,7 +545,7 @@ LEAN_EXPORT lean_obj_res lean_pq_nparams(b_lean_obj_arg result) {
 // PQparamtype - Returns the data type of the indicated statement parameter
 // Documentation: https://www.postgresql.org/docs/current/libpq-exec.html#LIBPQ-PQPARAMTYPE
 LEAN_EXPORT lean_obj_res lean_pq_paramtype(b_lean_obj_arg result, b_lean_obj_arg param_num) {
-  PGresult * result_obj = (PGresult *)lean_unbox(result);
+  PGresult * result_obj = (PGresult *)lean_unbox_usize(result);
   int param_num_int = lean_unbox(param_num);
   Oid param_type = PQparamtype(result_obj, param_num_int);
   lean_object * param_type_obj = lean_box_usize((size_t)param_type);
@@ -640,7 +640,7 @@ LEAN_EXPORT lean_obj_res lean_pq_unescape_bytea(b_lean_obj_arg str) {
 // PQclear - Frees the storage associated with a PGresult
 // Documentation: https://www.postgresql.org/docs/current/libpq-exec.html#LIBPQ-PQCLEAR
 LEAN_EXPORT lean_obj_res lean_pq_clear(b_lean_obj_arg result) {
-  PGresult * result_obj = (PGresult *)lean_unbox(result);
+  PGresult * result_obj = (PGresult *)lean_unbox_usize(result);
   PQclear(result_obj);
   return lean_io_result_mk_ok(lean_box(0));
 }
