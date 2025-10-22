@@ -1,11 +1,18 @@
 CompileFlags:
   Add: 
     # - -I$(lake env lean --print-prefix)/include
-    - -I/Users/nicolasgrislain/.elan/toolchains/leanprover--lean4---v4.22.0/include
+    - -I/Users/nicolasgrislain/.elan/toolchains/leanprover--lean4---v4.23.0/include
+    # Mac DD
+    - -I/Users/nicolas.grislain/.elan/toolchains/leanprover--lean4---v4.23.0/include
+    # Other
     - -I/usr/local/include
     - -I/opt/homebrew/include
     # - $(pkg-config --cflags libpq)
     - -I/nix/store/70xmhl2dzxzvljn4aa3klds0qymvk89g-libpq-17.5-dev/include
+    # Mac DD
+    - -I/opt/homebrew/opt/libpq/include
+    - -I/opt/homebrew/Cellar/openssl@3/3.6.0/include
+    # Other
     - -std=c17
     - -fPIC
   Remove: []
