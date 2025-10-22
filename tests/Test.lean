@@ -10,10 +10,10 @@ open ToString
 
 
 def testConnect : EIO LeanPq.Error PGresult := do
-  let conninfo := "host=localhost port=5432 user=postgres password=postgres dbname=postgres"
+  let conninfo := "host=localhost port=5432 user=postgres password=test dbname=postgres"
   let conn ← PqConnectDb conninfo
   let db ← PqDb conn
-  let result ← PqExec conn "SELECT 1"
+  let result ← PqExec conn "SELECT * FROM test"
   return result
 
 def main : IO Unit := do

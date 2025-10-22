@@ -7,11 +7,21 @@ open Extern
 
 
 def doConnect : EIO LeanPq.Error ExecStatus := do
-  let conninfo := "host=localhost port=5432 user=postgres password=postgres dbname=postgres"
+  let conninfo := "host=localhost port=5432 dbname=postgres user=postgres password=test"
   let conn ← PqConnectDb conninfo
-  let result ← PqExec conn "SELECT 1"
-  let res ← PqResultStatus result
-  return res
+  let connStatus ← PqStatus conn
+  (IO.println s!"connection status: {connStatus}").toEIO (fun e => LeanPq.Error.otherError (toString e))
+  let result ← PqExec conn "SELECT * FROM test;"
+  let resStatus ← PqResultStatus result
+  (IO.println s!"result status: {resStatus}").toEIO (fun e => LeanPq.Error.otherError (toString e))
+  _ ← IO.sleep 5000
+  let resStatus ← PqResultStatus result
+  (IO.println s!"result status: {resStatus}").toEIO (fun e => LeanPq.Error.otherError (toString e))
+  _ ← IO.sleep 5000
+  let resStatus ← PqResultStatus result
+  (IO.println s!"result status: {resStatus}").toEIO (fun e => LeanPq.Error.otherError (toString e))
+  _ ← IO.sleep 5000
+  return resStatus
 
 def main : IO Unit := do
   let result ← doConnect.toIO (fun e => IO.Error.otherError 0 (toString e))
