@@ -87,6 +87,9 @@ LEAN_EXPORT lean_obj_res lean_pq_connect_db_params(b_lean_obj_arg keywords, b_le
   int expand_dbname_cstr = lean_unbox(expand_dbname);
   PGconn *conn = PQconnectdbParams(keywords_cstr, values_cstr, expand_dbname_cstr); // Create the libpq handle
   ConnStatusType status = PQstatus(conn);
+#if DEBUG
+  fprintf(stderr, "PQstatus: %d\n", status);
+#endif
   if (status != CONNECTION_OK)
     return lean_io_result_mk_error(mk_pq_connection_error((uint32_t)status));
   Connection *connection = (Connection *)malloc(sizeof *connection); // Allocate our wrapper
@@ -96,7 +99,7 @@ LEAN_EXPORT lean_obj_res lean_pq_connect_db_params(b_lean_obj_arg keywords, b_le
   // Initialize all fields to safe defaults
   connection->conn = conn;
 #if DEBUG
-  fprintf(stderr, "pq_connect_db %p\n", conn);
+  fprintf(stderr, "Connection %p\n", conn);
 #endif
   if (!conn)
     return lean_io_result_mk_error(mk_pq_other_error("No connection"));
@@ -110,13 +113,17 @@ LEAN_EXPORT lean_obj_res lean_pq_connect_db(b_lean_obj_arg conninfo) {
   initialize();
   const char *conninfo_cstr = lean_string_cstr(conninfo); // Convert Lean string to C string
   PGconn *conn = PQconnectdb(conninfo_cstr); // Create the libpq handle
+  ConnStatusType status = PQstatus(conn);
+#if DEBUG
+  fprintf(stderr, "PQstatus: %d\n", status);
+#endif
   Connection *connection = (Connection *)malloc(sizeof *connection); // Allocate our wrapper
   if (!connection)
     return lean_io_result_mk_error(lean_box(LEAN_PQ_CONNECTION_FAILED_INIT));
   // Initialize all fields to safe defaults
   connection->conn = conn;
 #if DEBUG
-  fprintf(stderr, "pq_connect_db %p\n", conn);
+  fprintf(stderr, "Connection %p\n", conn);
 #endif
   if (!conn)
     return lean_io_result_mk_error(lean_box(LEAN_PQ_CONNECTION_FAILED_INIT));
