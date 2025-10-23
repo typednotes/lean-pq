@@ -71,6 +71,15 @@ static lean_object* mk_pq_other_error(const char* msg) {
   return other_err;
 }
 
+// TODO: Remove
+// Testing
+LEAN_EXPORT lean_obj_res lean_pq_test(b_lean_obj_arg text) {
+  const char * text_cstr = lean_string_cstr();
+  printf("TEST: text_cstr: %s\n", text_cstr);
+}
+
+
+
 // PQconnectdbParams - Makes a new connection to the database server using parameter arrays
 // Documentation: https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-PQCONNECTDBPARAMS
 LEAN_EXPORT lean_obj_res lean_pq_connect_db_params(b_lean_obj_arg keywords, b_lean_obj_arg values, b_lean_obj_arg expand_dbname) {
