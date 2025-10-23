@@ -13,14 +13,6 @@ def doConnect : EIO LeanPq.Error ExecStatus := do
   (IO.println s!"connection status: {connStatus}").toEIO (fun e => LeanPq.Error.otherError (toString e))
   let result ← PqExec conn "SELECT * FROM test;"
   let resStatus ← PqResultStatus result
-  (IO.println s!"result status: {resStatus}").toEIO (fun e => LeanPq.Error.otherError (toString e))
-  _ ← IO.sleep 5000
-  let resStatus ← PqResultStatus result
-  (IO.println s!"result status: {resStatus}").toEIO (fun e => LeanPq.Error.otherError (toString e))
-  _ ← IO.sleep 5000
-  let resStatus ← PqResultStatus result
-  (IO.println s!"result status: {resStatus}").toEIO (fun e => LeanPq.Error.otherError (toString e))
-  _ ← IO.sleep 5000
   return resStatus
 
 def main : IO Unit := do
