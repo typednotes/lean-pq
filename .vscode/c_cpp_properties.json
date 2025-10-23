@@ -1,0 +1,29 @@
+{
+    "configurations": [
+        {
+            "name": "Mac",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/Users/nicolas.grislain/.elan/toolchains/leanprover--lean4---v4.23.0/include",
+                "/usr/local/include",
+                "/opt/homebrew/include",
+                "/nix/store/70xmhl2dzxzvljn4aa3klds0qymvk89g-libpq-17.5-dev/include",
+                "/opt/homebrew/opt/libpq/include",
+                "/opt/homebrew/Cellar/openssl@3/3.6.0/include"
+            ],
+            "defines": [],
+            "macFrameworkPath": [
+                "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks"
+            ],
+            "compilerPath": "/usr/bin/clang",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "macos-clang-arm64",
+            "compilerArgs": [
+                "-fPIC"
+            ]
+        }
+    ],
+    "version": 4
+}
+

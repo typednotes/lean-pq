@@ -11,7 +11,7 @@ def doConnect : EIO LeanPq.Error ExecStatus := do
   let conn ← PqConnectDb conninfo
   let connStatus ← PqStatus conn
   (IO.println s!"connection status: {connStatus}").toEIO (fun e => LeanPq.Error.otherError (toString e))
-  let result ← PqExec conn "SELECT * FROM test2;"
+  let result ← PqExec conn "SELECT * FROM test;"
   let resStatus ← PqResultStatus result
   (IO.println s!"result status: {resStatus}").toEIO (fun e => LeanPq.Error.otherError (toString e))
   _ ← IO.sleep 5000
