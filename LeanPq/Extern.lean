@@ -24,11 +24,6 @@ Documentation: https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-
 @[extern "lean_pq_reset"]
 opaque PqReset (conn : Handle): EIO LeanPq.Error  Unit
 
-/-- Closes the connection to the server and frees memory.
-Documentation: https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-PQFINISH -/
-@[extern "lean_pq_finish"]
-opaque PqFinish (conn : Handle): EIO LeanPq.Error Unit
-
 -- [Connection Status Functions](https://www.postgresql.org/docs/current/libpq-status.html)
 
 /-- Returns the database name of the connection.
@@ -410,10 +405,5 @@ opaque PqEscapeByteaConn (conn : Handle) (input : String): EIO LeanPq.Error Stri
 Documentation: https://www.postgresql.org/docs/current/libpq-exec.html#LIBPQ-PQUNESCAPEBYTEA -/
 @[extern "lean_pq_unescape_bytea"]
 opaque PqUnescapeBytea (str : String): EIO LeanPq.Error String
-
-/-- Frees the storage associated with a PGresult.
-Documentation: https://www.postgresql.org/docs/current/libpq-exec.html#LIBPQ-PQCLEAR -/
-@[extern "lean_pq_clear"]
-opaque PqClear (result : PGresult): EIO LeanPq.Error Unit
 
 end Extern
