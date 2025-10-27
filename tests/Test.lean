@@ -13,7 +13,13 @@ def testConnect : EIO LeanPq.Error PGresult := do
   let conninfo := "host=localhost port=5432 user=postgres password=test dbname=postgres"
   let conn ← PqConnectDb conninfo
   let db ← PqDb conn
-  let result ← PqExec conn "SELECT * FROM test"
+  let query := "CREATE TABLE my_first_table (
+    first_column text,
+    second_column integer
+);"
+  let query := "DROP TABLE IF EXISTS my_first_table;"
+  let result ← PqExec conn query
+
   return result
 
 def main : IO Unit := do
@@ -27,3 +33,5 @@ def main : IO Unit := do
   --   PqReset conn
   --   PqFinish conn
   IO.println s!"Test done"
+
+#print IO.RealWorld.nonemptyType
