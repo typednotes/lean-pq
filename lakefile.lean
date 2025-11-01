@@ -27,6 +27,9 @@ def buildType := match get_config? buildType with | some "debug" => Lake.BuildTy
 @[default_target]
 lean_lib LeanPq
 
+lean_lib Tests where
+  globs := #[.submodules `Tests]
+
 -- @[default_target]
 lean_exe examples {
   root := `Examples
@@ -34,9 +37,7 @@ lean_exe examples {
 
 @[test_driver]
 lean_exe test {
-  srcDir := "Tests"
-  buildType := buildType
-  root := `Test
+  root := `Tests.Test
 }
 
 def traceArgs : FetchM (Array String) := do

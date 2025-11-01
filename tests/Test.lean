@@ -1,6 +1,8 @@
 import LeanPq.Extern
 import LeanPq.Error
 
+import Tests.DataType
+
 open Lean
 open LeanPq
 open Extern
