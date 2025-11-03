@@ -27,8 +27,7 @@ def buildType := match get_config? buildType with | some "debug" => Lake.BuildTy
 @[default_target]
 lean_lib LeanPq
 
-lean_lib Tests where
-  globs := #[.submodules `Tests]
+lean_lib Tests
 
 -- @[default_target]
 lean_exe examples {
@@ -36,7 +35,7 @@ lean_exe examples {
 }
 
 @[test_driver]
-lean_exe test {
+lean_exe tests {
   root := `Tests.Test
 }
 
